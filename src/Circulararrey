@@ -1,0 +1,130 @@
+import java.util.Scanner;
+
+public class CircularArrayQueue {
+    private int[] queue;
+    private int front, rear, count, size;
+
+    public CircularArrayQueue(int size) {
+        this.size = size;
+        queue = new int[size];
+        front = 0;
+        rear = -1;
+        count = 0;
+    }
+
+    // Check duplicate
+    private boolean isDuplicate(int element) {
+        for (int i = 0; i < count; i++) {
+            if (queue[(front + i) % size] == element)
+                return true;
+        }
+        return false;
+    }
+
+    // Add element
+    public void enqueue(int element) {
+        if (count == size) {
+            System.out.println("Queue is FULL!");
+            return;
+        }
+
+        if (isDuplicate(element)) {
+            System.out.println("Duplicate element! Cannot add: " + element);
+            return;
+        }
+
+        rear = (rear + 1) % size;
+        queue[rear] = element;
+        count++;
+        System.out.println("Added: " + element);
+    }
+
+    // Remove element
+    public void dequeue() {
+        if (count == 0) {
+            System.out.println("Queue is EMPTY!");
+            return;
+        }
+
+        System.out.println("Removed: " + queue[front]);
+        front = (front + 1) % size;
+        count--;
+    }
+
+    // Display elements
+    public void display() {
+        if (count == 0) {
+            System.out.println("Queue is EMPTY!");
+            return;
+        }
+
+        System.out.print("Queue elements: ");
+        for (int i = 0; i < count; i++)
+            System.out.print(queue[(front + i) % size] + " ");
+        System.out.println();
+    }
+
+    // Search element
+    public void search(int element) {
+        for (int i = 0; i < count; i++) {
+            if (queue[(front + i) % size] == element) {
+                System.out.println(element + " FOUND at position: " + (i + 1));
+                return;
+            }
+        }
+        System.out.println(element + " NOT FOUND!");
+    }
+
+    // Main (Scanner input)
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("Enter queue size: ");
+        int size = input.nextInt();
+
+        CircularArrayQueue q = new CircularArrayQueue(size);
+
+        int choice;
+        do {
+            System.out.println("\n1. Add");
+            System.out.println("2. Remove");
+            System.out.println("3. Display");
+            System.out.println("4. Search");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+            choice = input.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter element to add: ");
+                    int element = input.nextInt();
+                    q.enqueue(element);
+                    break;
+
+                case 2:
+                    q.dequeue();
+                    break;
+
+                case 3:
+                    q.display();
+                    break;
+
+                case 4:
+                    System.out.print("Enter element to search: ");
+                    int search = input.nextInt();
+                    q.search(search);
+                    break;
+
+                case 5:
+                    System.out.println("Goodbye!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice");
+            }
+
+        } while (choice != 5);
+
+        input.close();
+    }
+}
